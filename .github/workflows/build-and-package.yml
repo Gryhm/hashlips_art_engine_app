@@ -21,14 +21,7 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '14'
-
-    - name: Cache Gradle packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+        cache: gradle
 
     - name: Build with Gradle
       run: ./gradlew build
@@ -36,17 +29,17 @@ jobs:
     - name: Create application image
       run: |
         mkdir -p build/output
-        jpackage --input build/libs --main-jar cardanolips.jar --main-class com.example.MainClass --name cardanolips --type app-image --dest build/output
+        jpackage --input build/libs --main-jar MyApp.jar --main-class com.example.MainClass --name MyApp --type app-image --dest build/output
 
     - name: Create Windows EXE
       run: |
-        jpackage --input build/output/cardanolips --name cardanolips --main-class com.example.MainClass --type exe --dest build/output
+        jpackage --input build/output/MyApp --name MyApp --main-class com.example.MainClass --type exe --dest build/output
 
     - name: Upload EXE artifact
       uses: actions/upload-artifact@v3
       with:
-        name: cardanolips
-        path: build/output/cardanolips-*.exe
+        name: MyApp-exe
+        path: build/output/MyApp-*.exe
 
   release:
     needs: build
@@ -58,7 +51,7 @@ jobs:
     - name: Download EXE artifact
       uses: actions/download-artifact@v3
       with:
-        name: cardanolips
+        name: MyApp-exe
         path: build/output
 
     - name: Create GitHub Release
@@ -70,4 +63,4 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-        files: build/output/cardanolips-*.exe
+        files: build/output/MyApp-*.exe
