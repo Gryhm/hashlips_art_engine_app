@@ -182,13 +182,15 @@ function Aside(props) {
   const addMetadata = (_dna, _edition) => {
     let dateTime = Date.now();
     let tempMetadata = {
-      name: `${props.config.name} #${_edition}`,
-      description: props.config.description,
-      image: `REPLACE/${_edition}.png`,
-      edition: _edition,
-      date: dateTime,
-      attributes: attributesList,
-      compiler: "HashLips Art Engine",
+		"721": {
+			"policyID": {
+				"${props.config.name}${_edition}":{
+				  description: "Raging Teens evolved",
+				  image: `REPLACE/${_edition}.png`, //no idea what this is yet
+				  attributesList,
+				compiler: "Hashlips/Gryhm Cardano",}
+			}
+		}
     };
     metadataList.push(tempMetadata);
     attributesList = [];
