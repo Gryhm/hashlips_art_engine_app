@@ -14,16 +14,16 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up JDK 14
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
-        distribution: 'adopt'
+        distribution: 'temurin'
         java-version: '14'
 
     - name: Cache Gradle packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
@@ -36,29 +36,29 @@ jobs:
     - name: Create application image
       run: |
         mkdir -p build/output
-        jpackage --input build/libs --main-jar MyApp.jar --main-class com.example.MainClass --name MyApp --type app-image --dest build/output
+        jpackage --input build/libs --main-jar cardanolips.jar --main-class com.example.MainClass --name cardanolips --type app-image --dest build/output
 
     - name: Create Windows EXE
       run: |
-        jpackage --input build/output/MyApp --name MyApp --main-class com.example.MainClass --type exe --dest build/output
+        jpackage --input build/output/cardanolips --name cardanolips --main-class com.example.MainClass --type exe --dest build/output
 
     - name: Upload EXE artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
-        name: MyApp-exe
-        path: build/output/MyApp-*.exe
+        name: cardanolips
+        path: build/output/cardanolips-*.exe
 
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Download EXE artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
-        name: MyApp-exe
+        name: cardanolips
         path: build/output
 
     - name: Create GitHub Release
@@ -70,4 +70,4 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-        files: build/output/MyApp-*.exe
+        files: build/output/cardanolips-*.exe
