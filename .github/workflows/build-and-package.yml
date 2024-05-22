@@ -39,17 +39,17 @@ jobs:
     - name: Create application image
       run: |
         mkdir -p build/output
-        jpackage --input build/libs --main-jar cardanolips.jar --main-class com.example.MainClass --name cardanolips --type app-image --dest build/output
+        jpackage --input build/libs --main-jar main.jar --main-class com.example.MainClass --name main --type app-image --dest build/output
 
     - name: Create Windows EXE
       run: |
-        jpackage --input build/output/cardanolips --name cardanolips --main-class com.example.MainClass --type exe --dest build/output
+        jpackage --input build/output/main --name main --main-class com.example.MainClass --type exe --dest build/output
 
     - name: Upload EXE artifact
       uses: actions/upload-artifact@v3
       with:
-        name: cardanolips-exe
-        path: build/output/cardanolips-*.exe
+        name: main-exe
+        path: build/output/main-*.exe
 
   release:
     needs: build
@@ -61,7 +61,7 @@ jobs:
     - name: Download EXE artifact
       uses: actions/download-artifact@v3
       with:
-        name: cardanolips-exe
+        name: main-exe
         path: build/output
 
     - name: Create GitHub Release
@@ -73,4 +73,4 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-        files: build/output/cardanolips-*.exe
+        files: build/output/main-*.exe
